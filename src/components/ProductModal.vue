@@ -32,7 +32,7 @@
                   class="form-control mb-2"
                   placeholder="請輸入圖片連結"
                 />
-                <img class="img-fluid" :src="tempProduct.imageUrl" />
+              <img class="img-fluid" :src="tempProduct.imageUrl" />
               </div>
               <h3 class="mb-3">多圖新增</h3>
               <div v-if="Array.isArray(tempProduct.imagesUrl)">
@@ -308,6 +308,7 @@ const updateProduct = () => {
       alert(err.response.data.message); // 沒填到必填的欄位需要出現 alert 提示訊息
     });
 };
+
 const createImages = () => {
   tempProduct.value.imagesUrl = [''];
   tempProduct.value.imagesUrl.push('');
