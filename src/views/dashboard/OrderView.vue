@@ -85,9 +85,6 @@ const getOrders = (page = 1) => {
     .then((res) => {
       orders.value = res.data.orders;
       pagination.value = res.data.pagination;
-    })
-    .catch((err) => {
-      this.$swal(err.response, '', 'error');
     });
 };
 
