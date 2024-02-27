@@ -38,7 +38,7 @@
     </div>
     <p class="mt-5 mb-3 text-muted">
       &copy; 2024 - Charlotte Lee<br />
-      vue 第六週主線任務 建立路由表
+      vue 第七週主線任務 建立路由表
       <router-link class="nav-link" to="/">返回首頁</router-link>
     </p>
   </div>
