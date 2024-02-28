@@ -32,7 +32,24 @@
                   class="form-control mb-2"
                   placeholder="請輸入圖片連結"
                 />
-              <img class="img-fluid" :src="tempProduct.imageUrl" />
+                <!-- 上傳圖片 -->
+                <div class="mb-3">
+                  <label for="customFile" class="form-label"
+                    >或 上傳圖片
+                    <i
+                      class="fas fa-spinner fa-spin"
+                      v-if="status.fileUploading"
+                    ></i>
+                  </label>
+                  <input
+                    type="file"
+                    id="customFile"
+                    class="form-control"
+                    ref="fileInputRef"
+                    @change="uploadFile"
+                  />
+                </div>
+                <img class="img-fluid" :src="tempProduct.imageUrl" />
               </div>
               <h3 class="mb-3">多圖新增</h3>
               <div v-if="Array.isArray(tempProduct.imagesUrl)">
@@ -272,7 +289,7 @@
 <script setup>
 import axios from 'axios';
 import {
-  defineProps, toRefs, defineEmits,
+  ref, defineProps, toRefs, defineEmits,
 } from 'vue';
 import useModal from '@/hooks/useModal';
 
@@ -289,6 +306,10 @@ const { tempProduct, isNew } = toRefs(props);
 const emits = defineEmits(['get-data']);
 
 const { openModal, hideModal, modalRef } = useModal();
+
+const fileInputRef = ref(null);
+
+const status = ref({});
 
 const updateProduct = () => {
   let url = `${VITE_API}api/${VITE_PATH}/admin/product`;
@@ -312,6 +333,32 @@ const updateProduct = () => {
 const createImages = () => {
   tempProduct.value.imagesUrl = [''];
   tempProduct.value.imagesUrl.push('');
+};
+
+const uploadFile = () => {
+  const uploadedFile = fileInputRef.value.files[0];
+  const formData = new FormData();
+  formData.append('file-to-upload', uploadedFile);
+  const url = `${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`;
+  status.value.fileUploading = true;
+  axios
+    .post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => {
+      status.value.fileUploading = false;
+      if (res.data.success) {
+        tempProduct.value.imageUrl = res.data.imageUrl;
+        fileInputRef.value.value = '';
+      } else {
+        fileInputRef.value.value = '';
+      }
+    })
+    .catch(() => {
+      status.value.fileUploading = false;
+    });
 };
 
 defineExpose({
